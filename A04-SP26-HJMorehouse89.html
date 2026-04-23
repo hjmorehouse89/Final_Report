@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Holly Morehouse">
+<meta name="dcterms.date" content="2024-11-21">
+
+<title>Module 5 Assignment: Machine Learning on Scale</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="A04-SP26-HJMorehouse89_files/libs/clipboard/clipboard.min.js"></script>
+<script src="A04-SP26-HJMorehouse89_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="A04-SP26-HJMorehouse89_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="A04-SP26-HJMorehouse89_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="A04-SP26-HJMorehouse89_files/libs/quarto-html/popper.min.js"></script>
+<script src="A04-SP26-HJMorehouse89_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="A04-SP26-HJMorehouse89_files/libs/quarto-html/anchor.min.js"></script>
+<link href="A04-SP26-HJMorehouse89_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="A04-SP26-HJMorehouse89_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="A04-SP26-HJMorehouse89_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="A04-SP26-HJMorehouse89_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="A04-SP26-HJMorehouse89_files/libs/bootstrap/bootstrap-eb73fbda983cbb8789e777c1a84ab507.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#system-information" id="toc-system-information" class="nav-link active" data-scroll-target="#system-information">System Information</a></li>
+  <li><a href="#start-your-assignment-here" id="toc-start-your-assignment-here" class="nav-link" data-scroll-target="#start-your-assignment-here"><span class="header-section-number">1</span> Start your assignment here</a></li>
+  <li><a href="#github-link" id="toc-github-link" class="nav-link" data-scroll-target="#github-link"><span class="header-section-number">2</span> Github Link</a></li>
+  <li><a href="#in-the-linear-model-based-on-the-available-data-we-can-approach-it-in-the-understanding-that-there-is-a-straight-correlation-between-salary-and-years-of-relevant-experience.-in-this-situation-a-search-may-yield-results-that-align-with-the-belief-that-each-added-year-of-experience-will-result-in-an-increased-salary-figure." id="toc-in-the-linear-model-based-on-the-available-data-we-can-approach-it-in-the-understanding-that-there-is-a-straight-correlation-between-salary-and-years-of-relevant-experience.-in-this-situation-a-search-may-yield-results-that-align-with-the-belief-that-each-added-year-of-experience-will-result-in-an-increased-salary-figure." class="nav-link" data-scroll-target="#in-the-linear-model-based-on-the-available-data-we-can-approach-it-in-the-understanding-that-there-is-a-straight-correlation-between-salary-and-years-of-relevant-experience.-in-this-situation-a-search-may-yield-results-that-align-with-the-belief-that-each-added-year-of-experience-will-result-in-an-increased-salary-figure."><span class="header-section-number">3</span> In the linear model based on the available data, we can approach it in the understanding that there is a straight correlation between salary and years of relevant experience. In this situation, a search may yield results that align with the belief that each added year of experience will result in an increased salary figure.</a></li>
+  <li><a href="#in-the-polynominal-regression-we-can-see-a-relationship-of-how-salary-and-experience-can-curve-in-different-ways.-for-instance-someone-with-a-smaller-amount-of-experience-may-see-an-increase-in-salary-growth-over-time-but-salary-will-slow-down-as-experience-goes-on." id="toc-in-the-polynominal-regression-we-can-see-a-relationship-of-how-salary-and-experience-can-curve-in-different-ways.-for-instance-someone-with-a-smaller-amount-of-experience-may-see-an-increase-in-salary-growth-over-time-but-salary-will-slow-down-as-experience-goes-on." class="nav-link" data-scroll-target="#in-the-polynominal-regression-we-can-see-a-relationship-of-how-salary-and-experience-can-curve-in-different-ways.-for-instance-someone-with-a-smaller-amount-of-experience-may-see-an-increase-in-salary-growth-over-time-but-salary-will-slow-down-as-experience-goes-on."><span class="header-section-number">4</span> In the polynominal regression, we can see a relationship of how salary and experience can curve in different ways. For instance, someone with a smaller amount of experience may see an increase in salary growth over time, but salary will slow down as experience goes on.</a></li>
+  <li><a href="#the-random-forest-regression-is-meant-to-help-interpret-based-on-data-in-a-scenario-based-situation-with-the-guide-of-various-decision-trees.-in-this-context-it-might-be-related-to-looking-up-a-salary-range-based-on-factors-like-years-experience-and-relevant-work-experience." id="toc-the-random-forest-regression-is-meant-to-help-interpret-based-on-data-in-a-scenario-based-situation-with-the-guide-of-various-decision-trees.-in-this-context-it-might-be-related-to-looking-up-a-salary-range-based-on-factors-like-years-experience-and-relevant-work-experience." class="nav-link" data-scroll-target="#the-random-forest-regression-is-meant-to-help-interpret-based-on-data-in-a-scenario-based-situation-with-the-guide-of-various-decision-trees.-in-this-context-it-might-be-related-to-looking-up-a-salary-range-based-on-factors-like-years-experience-and-relevant-work-experience."><span class="header-section-number">5</span> The random forest regression is meant to help interpret based on data in a scenario based situation, with the guide of various decision trees. In this context, it might be related to looking up a salary range, based on factors like years experience and relevant work experience.</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="A04-SP26-HJMorehouse89.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Module 5 Assignment: Machine Learning on Scale</h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Holly Morehouse </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Boston University
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 21, 2024</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">April 23, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="system-information" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="system-information">System Information</h2>
+<div id="40e31a28" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> platform</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> psutil</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Operating System:"</span>, platform.system(), platform.release())</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Python Version:"</span>, platform.python_version())</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Machine:"</span>, platform.machine())</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Processor:"</span>, platform.processor())</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>mem <span class="op">=</span> psutil.virtual_memory()</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Total Memory (MB):"</span>, <span class="bu">round</span>(mem.total <span class="op">/</span> (<span class="dv">1024</span><span class="op">**</span><span class="dv">2</span>), <span class="dv">2</span>))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Available Memory (MB):"</span>, <span class="bu">round</span>(mem.available <span class="op">/</span> (<span class="dv">1024</span><span class="op">**</span><span class="dv">2</span>), <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Operating System: Linux 6.17.0-1010-aws
+Python Version: 3.12.3
+Machine: x86_64
+Processor: x86_64
+Total Memory (MB): 7935.53
+Available Memory (MB): 4378.77</code></pre>
+</div>
+</div>
+</section>
+<section id="start-your-assignment-here" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="start-your-assignment-here"><span class="header-section-number">1</span> Start your assignment here</h2>
+</section>
+<section id="github-link" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="github-link"><span class="header-section-number">2</span> Github Link</h2>
+<p>https://github.com/hjmorehouse89/A04-SP26-HJMorehouse89</p>
+<div id="f1e5251e" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> functions <span class="im">as</span> F</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, when, <span class="bu">pow</span>, trim</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer, OneHotEncoder, VectorAssembler</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.regression <span class="im">import</span> LinearRegression, RandomForestRegressor, GeneralizedLinearRegression</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.evaluation <span class="im">import</span> RegressionEvaluator</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.appName(<span class="st">"LightcastModule5"</span>).getOrCreate()</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> spark.read.option(<span class="st">"header"</span>, <span class="st">"true"</span>) <span class="op">\</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"inferSchema"</span>, <span class="st">"true"</span>) <span class="op">\</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"multiLine"</span>, <span class="st">"true"</span>) <span class="op">\</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"escape"</span>, <span class="st">"</span><span class="ch">\"</span><span class="st">"</span>) <span class="op">\</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    .csv(<span class="st">"./data/lightcast_job_postings.csv"</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loaded data"</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#df.printSchema()</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#df.show(5)</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>continuous_features <span class="op">=</span> [</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MIN_YEARS_EXPERIENCE"</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MAX_YEARS_EXPERIENCE"</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"DURATION"</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY_FROM"</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY_TO"</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>categorical_features <span class="op">=</span> [</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EDUCATION_LEVELS_NAME"</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"REMOTE_TYPE_NAME"</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">"SALARY"</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>selected_cols <span class="op">=</span> continuous_features <span class="op">+</span> categorical_features <span class="op">+</span> [target]</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df.select(<span class="op">*</span>selected_cols)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>df_clean.groupBy(<span class="st">"MIN_YEARS_EXPERIENCE"</span>)<span class="op">\</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>           .agg(F.count(<span class="st">"*"</span>).alias(<span class="st">"count"</span>)) <span class="op">\</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>           .orderBy(F.col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).desc())<span class="op">\</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>           .show(truncate<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df_clean.withColumn(<span class="st">"REMOTE_TYPE"</span>,</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>when(trim(col(<span class="st">"REMOTE_TYPE_NAME"</span>))<span class="op">==</span> <span class="st">"Remote"</span>, <span class="st">"Remote"</span>)</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>.when(trim(col(<span class="st">"REMOTE_TYPE_NAME"</span>))<span class="op">==</span> <span class="st">"Hybrid Remote"</span>, <span class="st">"Hybrid"</span>)</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>.when(trim(col(<span class="st">"REMOTE_TYPE_NAME"</span>))<span class="op">==</span> <span class="st">"Not Remote"</span>, <span class="st">"Onsite"</span>)</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>.when(col(<span class="st">"REMOTE_TYPE_NAME"</span>).isNull(),<span class="st">"Onsite"</span>)</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>.otherwise(<span class="st">"Onsite"</span>))</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>df_clean.select(<span class="st">"REMOTE_TYPE_NAME"</span>).distinct().show(truncate<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>df_clean.drop(<span class="st">"REMOTE_TYPE_NAME"</span>)</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df_clean.withColumn(<span class="st">"EXPERIENCE_GROUP"</span>,</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>when(col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).between(<span class="dv">0</span>,<span class="dv">1</span>),<span class="st">"Internship/Entry Level"</span>)</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>.when(col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).isNull(),<span class="st">"Junior"</span>)</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>.when(col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).between(<span class="dv">1</span>,<span class="dv">3</span>),<span class="st">"Junior"</span>)</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>.when(col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).between(<span class="dv">3</span>,<span class="dv">5</span>),<span class="st">"Mid-Level"</span>)</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>.when(col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).between(<span class="dv">5</span>,<span class="dv">10</span>),<span class="st">"Senior"</span>)</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>.otherwise(<span class="st">"Expert"</span>)</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>df_clean.show(<span class="dv">5</span>,truncate<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df_clean.withColumn(</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY_CLEAN"</span>,</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>    F.when((F.col(<span class="st">"SALARY"</span>).isNull()) <span class="op">|</span> (F.col(<span class="st">"SALARY"</span>) <span class="op">==</span> <span class="dv">0</span>) <span class="op">|</span> F.isnan(<span class="st">"SALARY"</span>), <span class="va">None</span>).otherwise(F.col(<span class="st">"SALARY"</span>))</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>).withColumn(</span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY_FROM_CLEAN"</span>,</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>    F.when((F.col(<span class="st">"SALARY_FROM"</span>).isNull()) <span class="op">|</span> (F.col(<span class="st">"SALARY_FROM"</span>) <span class="op">==</span> <span class="dv">0</span>) <span class="op">|</span> F.isnan(<span class="st">"SALARY_FROM"</span>), <span class="va">None</span>).otherwise(F.col(<span class="st">"SALARY_FROM"</span>))</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>).withColumn(</span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY_TO_CLEAN"</span>,</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>    F.when((F.col(<span class="st">"SALARY_TO"</span>).isNull()) <span class="op">|</span> (F.col(<span class="st">"SALARY_TO"</span>) <span class="op">==</span> <span class="dv">0</span>) <span class="op">|</span> F.isnan(<span class="st">"SALARY_TO"</span>), <span class="va">None</span>).otherwise(F.col(<span class="st">"SALARY_TO"</span>))</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df_clean.withColumn(</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY_FINAL"</span>,</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>    F.when(F.col(<span class="st">"SALARY_CLEAN"</span>).isNotNull(),F.col(<span class="st">"SALARY_CLEAN"</span>))</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>    .when(</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>        F.col(<span class="st">"SALARY_FROM_CLEAN"</span>).isNotNull() <span class="op">&amp;</span> F.col(<span class="st">"SALARY_TO_CLEAN"</span>).isNotNull(),(F.col(<span class="st">"SALARY_FROM_CLEAN"</span>) <span class="op">+</span> F.col(<span class="st">"SALARY_TO_CLEAN"</span>))<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>    .when(</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>        F.col(<span class="st">"SALARY_FROM_CLEAN"</span>).isNotNull() <span class="op">&amp;</span> F.col(<span class="st">"SALARY_TO_CLEAN"</span>).isNull(), F.col(<span class="st">"SALARY_FROM_CLEAN"</span>)</span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>    .when(</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>        F.col(<span class="st">"SALARY_TO_CLEAN"</span>).isNotNull() <span class="op">&amp;</span> F.col(<span class="st">"SALARY_FROM_CLEAN"</span>).isNull(), F.col(<span class="st">"SALARY_TO_CLEAN"</span>)</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>    .otherwise(<span class="va">None</span>)</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> selected_cols:</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>    df_clean <span class="op">=</span> df_clean.<span class="bu">filter</span>(col(c).isNotNull())</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cleaned row count:"</span>, df_clean.count())</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df_clean.withColumn(</span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MIN_YEARS_EXPERIENCE_SQ"</span>,</span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>    <span class="bu">pow</span>(col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>), <span class="dv">2</span>)</span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>indexers <span class="op">=</span> [</span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>    StringIndexer(inputCol<span class="op">=</span>c, outputCol<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">_idx"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>)</span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> categorical_features</span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>encoders <span class="op">=</span> [</span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>    OneHotEncoder(inputCol<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">_idx"</span>, outputCol<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">_vec"</span>)</span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> categorical_features</span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a>features_input <span class="op">=</span> continuous_features <span class="op">+</span> [<span class="ss">f"</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">_vec"</span> <span class="cf">for</span> c <span class="kw">in</span> categorical_features]</span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a>assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>    inputCols<span class="op">=</span>features_input,</span>
+<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>    outputCol<span class="op">=</span><span class="st">"features"</span></span>
+<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a>poly_input <span class="op">=</span> [</span>
+<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MIN_YEARS_EXPERIENCE"</span>,</span>
+<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MIN_YEARS_EXPERIENCE_SQ"</span>,</span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MAX_YEARS_EXPERIENCE"</span>,</span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a>    <span class="st">"DURATION"</span>,</span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY_FROM"</span></span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>] <span class="op">+</span> [<span class="ss">f"</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">_vec"</span> <span class="cf">for</span> c <span class="kw">in</span> categorical_features]</span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a>poly_assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a>    inputCols<span class="op">=</span>poly_input,</span>
+<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a>    outputCol<span class="op">=</span><span class="st">"features_poly"</span></span>
+<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> Pipeline(stages<span class="op">=</span>indexers <span class="op">+</span> encoders <span class="op">+</span> [assembler, poly_assembler])</span>
+<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a>pipeline_model <span class="op">=</span> pipeline.fit(df_clean)</span>
+<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a>final_df <span class="op">=</span> pipeline_model.transform(df_clean)</span>
+<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a>final_df.select(<span class="st">"SALARY"</span>, <span class="st">"features"</span>, <span class="st">"features_poly"</span>).show(<span class="dv">5</span>, truncate<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-146"><a href="#cb3-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-147"><a href="#cb3-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-148"><a href="#cb3-148" aria-hidden="true" tabindex="-1"></a>train_df, test_df <span class="op">=</span> final_df.randomSplit([<span class="fl">0.8</span>, <span class="fl">0.2</span>], seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb3-149"><a href="#cb3-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-150"><a href="#cb3-150" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Train count:"</span>, train_df.count())</span>
+<span id="cb3-151"><a href="#cb3-151" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Test count:"</span>, test_df.count())</span>
+<span id="cb3-152"><a href="#cb3-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-153"><a href="#cb3-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-154"><a href="#cb3-154" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> LinearRegression(</span>
+<span id="cb3-155"><a href="#cb3-155" aria-hidden="true" tabindex="-1"></a>    featuresCol<span class="op">=</span><span class="st">"features"</span>,</span>
+<span id="cb3-156"><a href="#cb3-156" aria-hidden="true" tabindex="-1"></a>    labelCol<span class="op">=</span><span class="st">"SALARY"</span></span>
+<span id="cb3-157"><a href="#cb3-157" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-158"><a href="#cb3-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-159"><a href="#cb3-159" aria-hidden="true" tabindex="-1"></a>lr_model <span class="op">=</span> lr.fit(train_df)</span>
+<span id="cb3-160"><a href="#cb3-160" aria-hidden="true" tabindex="-1"></a>lr_predictions <span class="op">=</span> lr_model.transform(test_df)</span>
+<span id="cb3-161"><a href="#cb3-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-162"><a href="#cb3-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-163"><a href="#cb3-163" aria-hidden="true" tabindex="-1"></a>poly_lr <span class="op">=</span> LinearRegression(</span>
+<span id="cb3-164"><a href="#cb3-164" aria-hidden="true" tabindex="-1"></a>    featuresCol<span class="op">=</span><span class="st">"features_poly"</span>,</span>
+<span id="cb3-165"><a href="#cb3-165" aria-hidden="true" tabindex="-1"></a>    labelCol<span class="op">=</span><span class="st">"SALARY"</span></span>
+<span id="cb3-166"><a href="#cb3-166" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-167"><a href="#cb3-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-168"><a href="#cb3-168" aria-hidden="true" tabindex="-1"></a>poly_model <span class="op">=</span> poly_lr.fit(train_df)</span>
+<span id="cb3-169"><a href="#cb3-169" aria-hidden="true" tabindex="-1"></a>poly_predictions <span class="op">=</span> poly_model.transform(test_df)</span>
+<span id="cb3-170"><a href="#cb3-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-171"><a href="#cb3-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-172"><a href="#cb3-172" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestRegressor(</span>
+<span id="cb3-173"><a href="#cb3-173" aria-hidden="true" tabindex="-1"></a>    featuresCol<span class="op">=</span><span class="st">"features"</span>,</span>
+<span id="cb3-174"><a href="#cb3-174" aria-hidden="true" tabindex="-1"></a>    labelCol<span class="op">=</span><span class="st">"SALARY"</span>,</span>
+<span id="cb3-175"><a href="#cb3-175" aria-hidden="true" tabindex="-1"></a>    numTrees<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb3-176"><a href="#cb3-176" aria-hidden="true" tabindex="-1"></a>    maxDepth<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb3-177"><a href="#cb3-177" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb3-178"><a href="#cb3-178" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-179"><a href="#cb3-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-180"><a href="#cb3-180" aria-hidden="true" tabindex="-1"></a>rf_model <span class="op">=</span> rf.fit(train_df)</span>
+<span id="cb3-181"><a href="#cb3-181" aria-hidden="true" tabindex="-1"></a>rf_predictions <span class="op">=</span> rf_model.transform(test_df)</span>
+<span id="cb3-182"><a href="#cb3-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-183"><a href="#cb3-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-184"><a href="#cb3-184" aria-hidden="true" tabindex="-1"></a>rmse_eval <span class="op">=</span> RegressionEvaluator(labelCol<span class="op">=</span><span class="st">"SALARY"</span>, predictionCol<span class="op">=</span><span class="st">"prediction"</span>, metricName<span class="op">=</span><span class="st">"rmse"</span>)</span>
+<span id="cb3-185"><a href="#cb3-185" aria-hidden="true" tabindex="-1"></a>r2_eval <span class="op">=</span> RegressionEvaluator(labelCol<span class="op">=</span><span class="st">"SALARY"</span>, predictionCol<span class="op">=</span><span class="st">"prediction"</span>, metricName<span class="op">=</span><span class="st">"r2"</span>)</span>
+<span id="cb3-186"><a href="#cb3-186" aria-hidden="true" tabindex="-1"></a>mae_eval <span class="op">=</span> RegressionEvaluator(labelCol<span class="op">=</span><span class="st">"SALARY"</span>, predictionCol<span class="op">=</span><span class="st">"prediction"</span>, metricName<span class="op">=</span><span class="st">"mae"</span>)</span>
+<span id="cb3-187"><a href="#cb3-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-188"><a href="#cb3-188" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate_model(name, predictions, model_summary<span class="op">=</span><span class="va">None</span>, num_params<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb3-189"><a href="#cb3-189" aria-hidden="true" tabindex="-1"></a>    rmse <span class="op">=</span> rmse_eval.evaluate(predictions)</span>
+<span id="cb3-190"><a href="#cb3-190" aria-hidden="true" tabindex="-1"></a>    r2 <span class="op">=</span> r2_eval.evaluate(predictions)</span>
+<span id="cb3-191"><a href="#cb3-191" aria-hidden="true" tabindex="-1"></a>    mae <span class="op">=</span> mae_eval.evaluate(predictions)</span>
+<span id="cb3-192"><a href="#cb3-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-193"><a href="#cb3-193" aria-hidden="true" tabindex="-1"></a>    aic <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb3-194"><a href="#cb3-194" aria-hidden="true" tabindex="-1"></a>    bic <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb3-195"><a href="#cb3-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-196"><a href="#cb3-196" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> model_summary <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb3-197"><a href="#cb3-197" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb3-198"><a href="#cb3-198" aria-hidden="true" tabindex="-1"></a>            aic <span class="op">=</span> model_summary.aic</span>
+<span id="cb3-199"><a href="#cb3-199" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span>:</span>
+<span id="cb3-200"><a href="#cb3-200" aria-hidden="true" tabindex="-1"></a>            aic <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb3-201"><a href="#cb3-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-202"><a href="#cb3-202" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb3-203"><a href="#cb3-203" aria-hidden="true" tabindex="-1"></a>            n <span class="op">=</span> model_summary.numInstances</span>
+<span id="cb3-204"><a href="#cb3-204" aria-hidden="true" tabindex="-1"></a>            deviance <span class="op">=</span> model_summary.deviance</span>
+<span id="cb3-205"><a href="#cb3-205" aria-hidden="true" tabindex="-1"></a>            dispersion <span class="op">=</span> model_summary.dispersion</span>
+<span id="cb3-206"><a href="#cb3-206" aria-hidden="true" tabindex="-1"></a>            k <span class="op">=</span> num_params <span class="cf">if</span> num_params <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="bu">len</span>(model_summary.coefficients) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-207"><a href="#cb3-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-208"><a href="#cb3-208" aria-hidden="true" tabindex="-1"></a>            log_likelihood <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span> <span class="op">*</span> (</span>
+<span id="cb3-209"><a href="#cb3-209" aria-hidden="true" tabindex="-1"></a>                n <span class="op">*</span> math.log(<span class="dv">2</span> <span class="op">*</span> math.pi)</span>
+<span id="cb3-210"><a href="#cb3-210" aria-hidden="true" tabindex="-1"></a>                <span class="op">+</span> n <span class="op">*</span> math.log(dispersion)</span>
+<span id="cb3-211"><a href="#cb3-211" aria-hidden="true" tabindex="-1"></a>                <span class="op">+</span> deviance <span class="op">/</span> dispersion</span>
+<span id="cb3-212"><a href="#cb3-212" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-213"><a href="#cb3-213" aria-hidden="true" tabindex="-1"></a>            bic <span class="op">=</span> k <span class="op">*</span> math.log(n) <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> log_likelihood</span>
+<span id="cb3-214"><a href="#cb3-214" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span>:</span>
+<span id="cb3-215"><a href="#cb3-215" aria-hidden="true" tabindex="-1"></a>            bic <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb3-216"><a href="#cb3-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-217"><a href="#cb3-217" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb3-218"><a href="#cb3-218" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Model"</span>: name,</span>
+<span id="cb3-219"><a href="#cb3-219" aria-hidden="true" tabindex="-1"></a>        <span class="st">"RMSE"</span>: rmse,</span>
+<span id="cb3-220"><a href="#cb3-220" aria-hidden="true" tabindex="-1"></a>        <span class="st">"R2"</span>: r2,</span>
+<span id="cb3-221"><a href="#cb3-221" aria-hidden="true" tabindex="-1"></a>        <span class="st">"MAE"</span>: mae,</span>
+<span id="cb3-222"><a href="#cb3-222" aria-hidden="true" tabindex="-1"></a>        <span class="st">"AIC"</span>: aic,</span>
+<span id="cb3-223"><a href="#cb3-223" aria-hidden="true" tabindex="-1"></a>        <span class="st">"BIC"</span>: bic</span>
+<span id="cb3-224"><a href="#cb3-224" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-225"><a href="#cb3-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-226"><a href="#cb3-226" aria-hidden="true" tabindex="-1"></a>lr_results <span class="op">=</span> evaluate_model(</span>
+<span id="cb3-227"><a href="#cb3-227" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Linear Regression"</span>,</span>
+<span id="cb3-228"><a href="#cb3-228" aria-hidden="true" tabindex="-1"></a>    lr_predictions,</span>
+<span id="cb3-229"><a href="#cb3-229" aria-hidden="true" tabindex="-1"></a>    lr_model.summary,</span>
+<span id="cb3-230"><a href="#cb3-230" aria-hidden="true" tabindex="-1"></a>    <span class="bu">len</span>(lr_model.coefficients) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-231"><a href="#cb3-231" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-232"><a href="#cb3-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-233"><a href="#cb3-233" aria-hidden="true" tabindex="-1"></a>poly_results <span class="op">=</span> evaluate_model(</span>
+<span id="cb3-234"><a href="#cb3-234" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Polynomial Regression"</span>,</span>
+<span id="cb3-235"><a href="#cb3-235" aria-hidden="true" tabindex="-1"></a>    poly_predictions,</span>
+<span id="cb3-236"><a href="#cb3-236" aria-hidden="true" tabindex="-1"></a>    poly_model.summary,</span>
+<span id="cb3-237"><a href="#cb3-237" aria-hidden="true" tabindex="-1"></a>    <span class="bu">len</span>(poly_model.coefficients) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-239"><a href="#cb3-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-240"><a href="#cb3-240" aria-hidden="true" tabindex="-1"></a>rf_results <span class="op">=</span> evaluate_model(</span>
+<span id="cb3-241"><a href="#cb3-241" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Random Forest"</span>,</span>
+<span id="cb3-242"><a href="#cb3-242" aria-hidden="true" tabindex="-1"></a>    rf_predictions,</span>
+<span id="cb3-243"><a href="#cb3-243" aria-hidden="true" tabindex="-1"></a>    <span class="va">None</span>,</span>
+<span id="cb3-244"><a href="#cb3-244" aria-hidden="true" tabindex="-1"></a>    <span class="va">None</span></span>
+<span id="cb3-245"><a href="#cb3-245" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-246"><a href="#cb3-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-247"><a href="#cb3-247" aria-hidden="true" tabindex="-1"></a>results_df <span class="op">=</span> pd.DataFrame([lr_results, poly_results, rf_results])</span>
+<span id="cb3-248"><a href="#cb3-248" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/04/23 03:59:50 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Loaded data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 2:&gt;                                                          (0 + 1) / 1][Stage 2:===========================================================(1 + 0) / 1]                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+--------------------+-----+
+|MIN_YEARS_EXPERIENCE|count|
++--------------------+-----+
+|15                  |925  |
+|14                  |142  |
+|13                  |83   |
+|12                  |2125 |
+|11                  |199  |
+|10                  |5191 |
+|9                   |403  |
+|8                   |3705 |
+|7                   |3164 |
+|6                   |2717 |
+|5                   |10625|
+|4                   |3298 |
+|3                   |6850 |
+|2                   |6395 |
+|1                   |2852 |
+|0                   |678  |
+|NULL                |23146|
++--------------------+-----+
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 5:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+----------------+
+|REMOTE_TYPE_NAME|
++----------------+
+|Remote          |
+|[None]          |
+|Not Remote      |
+|Hybrid Remote   |
+|NULL            |
++----------------+
+
++--------------------+--------------------+--------+-----------+---------+-----------------------------+----------------+------+-----------+----------------+
+|MIN_YEARS_EXPERIENCE|MAX_YEARS_EXPERIENCE|DURATION|SALARY_FROM|SALARY_TO|EDUCATION_LEVELS_NAME        |REMOTE_TYPE_NAME|SALARY|REMOTE_TYPE|EXPERIENCE_GROUP|
++--------------------+--------------------+--------+-----------+---------+-----------------------------+----------------+------+-----------+----------------+
+|2                   |2                   |6       |NULL       |NULL     |[\n  "Bachelor's degree"\n]  |[None]          |NULL  |Onsite     |Junior          |
+|3                   |3                   |NULL    |NULL       |NULL     |[\n  "No Education Listed"\n]|Remote          |NULL  |Remote     |Junior          |
+|5                   |NULL                |35      |NULL       |NULL     |[\n  "Bachelor's degree"\n]  |[None]          |NULL  |Onsite     |Mid-Level       |
+|3                   |NULL                |48      |NULL       |NULL     |[\n  "No Education Listed"\n]|[None]          |NULL  |Onsite     |Junior          |
+|NULL                |NULL                |15      |35000      |150000   |[\n  "No Education Listed"\n]|[None]          |92500 |Onsite     |Junior          |
++--------------------+--------------------+--------+-----------+---------+-----------------------------+----------------+------+-----------+----------------+
+only showing top 5 rows</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 9:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cleaned row count: 2243</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 12:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 18:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+------+--------------------------------------------------------------+---------------------------------------------------------+
+|SALARY|features                                                      |features_poly                                            |
++------+--------------------------------------------------------------+---------------------------------------------------------+
+|131100|(27,[0,1,2,3,4,5,23],[2.0,2.0,11.0,113400.0,148800.0,1.0,1.0])|(27,[0,1,2,3,4,5,23],[2.0,4.0,2.0,11.0,113400.0,1.0,1.0])|
+|136950|(27,[0,1,2,3,4,9,24],[3.0,3.0,28.0,115300.0,158600.0,1.0,1.0])|(27,[0,1,2,3,4,9,24],[3.0,9.0,3.0,28.0,115300.0,1.0,1.0])|
+|136950|(27,[0,1,2,3,4,9,24],[3.0,3.0,28.0,115300.0,158600.0,1.0,1.0])|(27,[0,1,2,3,4,9,24],[3.0,9.0,3.0,28.0,115300.0,1.0,1.0])|
+|104000|(27,[0,1,2,3,4,5,23],[3.0,3.0,8.0,104000.0,104000.0,1.0,1.0]) |(27,[0,1,2,3,4,5,23],[3.0,9.0,3.0,8.0,104000.0,1.0,1.0]) |
+|80000 |(27,[0,1,2,3,4,5,23],[3.0,3.0,37.0,60000.0,100000.0,1.0,1.0]) |(27,[0,1,2,3,4,5,23],[3.0,9.0,3.0,37.0,60000.0,1.0,1.0]) |
++------+--------------------------------------------------------------+---------------------------------------------------------+
+only showing top 5 rows</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 25:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Train count: 1848</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 28:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Test count: 395</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>26/04/23 04:00:49 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+26/04/23 04:00:49 WARN Instrumentation: [d28b6af2] regParam is zero, which might cause numerical instability and overfitting.
+[Stage 31:&gt;                                                         (0 + 1) / 1]                                                                                26/04/23 04:00:54 WARN Instrumentation: [d28b6af2] Cholesky solver failed due to singular covariance matrix. Retrying with Quasi-Newton solver.
+26/04/23 04:00:56 ERROR LBFGS: Failure! Resetting history: breeze.optimize.FirstOrderException: Line search zoom failed
+26/04/23 04:00:56 ERROR LBFGS: Failure! Resetting history: breeze.optimize.FirstOrderException: Line search zoom failed
+26/04/23 04:00:56 ERROR LBFGS: Failure again! Giving up and returning. Maybe the objective is just poorly behaved?
+[Stage 32:&gt;                                                         (0 + 1) / 1]                                                                                26/04/23 04:01:02 WARN Instrumentation: [068fbb34] regParam is zero, which might cause numerical instability and overfitting.
+[Stage 33:&gt;                                                         (0 + 1) / 1]                                                                                26/04/23 04:01:06 WARN Instrumentation: [068fbb34] Cholesky solver failed due to singular covariance matrix. Retrying with Quasi-Newton solver.
+[Stage 34:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 35:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 36:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 37:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 39:&gt;                                                         (0 + 1) / 1]                                                                                26/04/23 04:01:32 WARN DAGScheduler: Broadcasting large task binary with size 1158.1 KiB
+26/04/23 04:01:32 WARN DAGScheduler: Broadcasting large task binary with size 2038.5 KiB
+26/04/23 04:01:33 WARN DAGScheduler: Broadcasting large task binary with size 3.4 MiB
+[Stage 51:&gt;                                                         (0 + 1) / 1]                                                                                26/04/23 04:01:35 WARN DAGScheduler: Broadcasting large task binary with size 5.8 MiB
+[Stage 53:&gt;                                                         (0 + 1) / 1]26/04/23 04:01:36 WARN DAGScheduler: Broadcasting large task binary with size 1168.7 KiB
+[Stage 54:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 55:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 56:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 57:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 58:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 59:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 60:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 61:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 62:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 63:&gt;                                                         (0 + 1) / 1]</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   Model          RMSE        R2          MAE   AIC   BIC
+0      Linear Regression    987.534153  0.999137   347.941263  None  None
+1  Polynomial Regression  11887.942614  0.874966  8735.845298  None  None
+2          Random Forest   3497.585267  0.989177  2014.380145  None  None</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                                                                                </code></pre>
+</div>
+</div>
+</section>
+<section id="in-the-linear-model-based-on-the-available-data-we-can-approach-it-in-the-understanding-that-there-is-a-straight-correlation-between-salary-and-years-of-relevant-experience.-in-this-situation-a-search-may-yield-results-that-align-with-the-belief-that-each-added-year-of-experience-will-result-in-an-increased-salary-figure." class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="in-the-linear-model-based-on-the-available-data-we-can-approach-it-in-the-understanding-that-there-is-a-straight-correlation-between-salary-and-years-of-relevant-experience.-in-this-situation-a-search-may-yield-results-that-align-with-the-belief-that-each-added-year-of-experience-will-result-in-an-increased-salary-figure."><span class="header-section-number">3</span> In the linear model based on the available data, we can approach it in the understanding that there is a straight correlation between salary and years of relevant experience. In this situation, a search may yield results that align with the belief that each added year of experience will result in an increased salary figure.</h2>
+<div id="23403cfa" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model feature names</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>linear_feature_names <span class="op">=</span> final_df.schema[<span class="st">"features"</span>].metadata[<span class="st">"ml_attr"</span>][<span class="st">"attrs"</span>]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>linear_names <span class="op">=</span> []</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> attr_type <span class="kw">in</span> linear_feature_names:</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> item <span class="kw">in</span> linear_feature_names[attr_type]:</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        linear_names.append(item[<span class="st">"name"</span>])</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>coef_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Feature"</span>: linear_names,</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coefficient"</span>: <span class="bu">list</span>(lr_model.coefficients)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Polynomial model feature names</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>poly_feature_names <span class="op">=</span> final_df.schema[<span class="st">"features_poly"</span>].metadata[<span class="st">"ml_attr"</span>][<span class="st">"attrs"</span>]</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>poly_names <span class="op">=</span> []</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> attr_type <span class="kw">in</span> poly_feature_names:</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> item <span class="kw">in</span> poly_feature_names[attr_type]:</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        poly_names.append(item[<span class="st">"name"</span>])</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>poly_coef_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Feature"</span>: poly_names,</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coefficient"</span>: <span class="bu">list</span>(poly_model.coefficients)</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Polynomial Regression Coefficients:"</span>)</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(poly_coef_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Polynomial Regression Coefficients:
+                                              Feature   Coefficient
+0   EDUCATION_LEVELS_NAME_vec_[\n  "Bachelor's deg...   1658.733970
+1   EDUCATION_LEVELS_NAME_vec_[\n  "No Education L...   -155.671683
+2   EDUCATION_LEVELS_NAME_vec_[\n  "Bachelor's deg...   1658.733970
+3   EDUCATION_LEVELS_NAME_vec_[\n  "High school or...     35.579649
+4   EDUCATION_LEVELS_NAME_vec_[\n  "Bachelor's deg...      0.923371
+5   EDUCATION_LEVELS_NAME_vec_[\n  "High school or...     66.393341
+6   EDUCATION_LEVELS_NAME_vec_[\n  "Associate degr...  -2505.179063
+7   EDUCATION_LEVELS_NAME_vec_[\n  "Master's degre...   3460.600866
+8   EDUCATION_LEVELS_NAME_vec_[\n  "Associate degr...  -7513.075447
+9   EDUCATION_LEVELS_NAME_vec_[\n  "Bachelor's deg...   6710.251561
+10  EDUCATION_LEVELS_NAME_vec_[\n  "Master's degre...  -9047.269280
+11  EDUCATION_LEVELS_NAME_vec_[\n  "Associate degr...  -4903.620525
+12  EDUCATION_LEVELS_NAME_vec_[\n  "High school or...   9122.733764
+13  EDUCATION_LEVELS_NAME_vec_[\n  "High school or... -10716.868744
+14  EDUCATION_LEVELS_NAME_vec_[\n  "High school or...  22020.791272
+15  EDUCATION_LEVELS_NAME_vec_[\n  "Ph.D. or profe...   4032.926352
+16  EDUCATION_LEVELS_NAME_vec_[\n  "High school or...   3613.694597
+17  EDUCATION_LEVELS_NAME_vec_[\n  "Associate degr...  -9598.101769
+18                        REMOTE_TYPE_NAME_vec_[None] -12688.263433
+19                        REMOTE_TYPE_NAME_vec_Remote  -4589.965795
+20                 REMOTE_TYPE_NAME_vec_Hybrid Remote  -5333.947383
+21                    REMOTE_TYPE_NAME_vec_Not Remote  -7813.870206
+22                               MIN_YEARS_EXPERIENCE   8862.512298
+23                            MIN_YEARS_EXPERIENCE_SQ    -63.457290
+24                               MAX_YEARS_EXPERIENCE   -187.921682
+25                                           DURATION    190.600157
+26                                        SALARY_FROM   3116.531944</code></pre>
+</div>
+</div>
+</section>
+<section id="in-the-polynominal-regression-we-can-see-a-relationship-of-how-salary-and-experience-can-curve-in-different-ways.-for-instance-someone-with-a-smaller-amount-of-experience-may-see-an-increase-in-salary-growth-over-time-but-salary-will-slow-down-as-experience-goes-on." class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="in-the-polynominal-regression-we-can-see-a-relationship-of-how-salary-and-experience-can-curve-in-different-ways.-for-instance-someone-with-a-smaller-amount-of-experience-may-see-an-increase-in-salary-growth-over-time-but-salary-will-slow-down-as-experience-goes-on."><span class="header-section-number">4</span> In the polynominal regression, we can see a relationship of how salary and experience can curve in different ways. For instance, someone with a smaller amount of experience may see an increase in salary growth over time, but salary will slow down as experience goes on.</h2>
+<div id="42d1685a" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>lr_pd <span class="op">=</span> lr_predictions.select(<span class="st">"SALARY"</span>, <span class="st">"prediction"</span>).toPandas()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>lr_pd[<span class="st">"Model"</span>] <span class="op">=</span> <span class="st">"Linear Regression"</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>poly_pd <span class="op">=</span> poly_predictions.select(<span class="st">"SALARY"</span>, <span class="st">"prediction"</span>).toPandas()</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>poly_pd[<span class="st">"Model"</span>] <span class="op">=</span> <span class="st">"Polynomial Regression"</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>rf_pd <span class="op">=</span> rf_predictions.select(<span class="st">"SALARY"</span>, <span class="st">"prediction"</span>).toPandas()</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>rf_pd[<span class="st">"Model"</span>] <span class="op">=</span> <span class="st">"Random Forest"</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>all_preds <span class="op">=</span> pd.concat([lr_pd, poly_pd, rf_pd], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>all_preds.to_csv(<span class="st">"output/model_predictions.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>axes <span class="op">=</span> axes.flatten()</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>plot_data <span class="op">=</span> [</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Linear Regression"</span>, lr_pd),</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Polynomial Regression"</span>, poly_pd),</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Random Forest"</span>, rf_pd)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (name, data) <span class="kw">in</span> <span class="bu">enumerate</span>(plot_data):</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    axes[i].scatter(data[<span class="st">"SALARY"</span>], data[<span class="st">"prediction"</span>], alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    min_val <span class="op">=</span> <span class="bu">min</span>(data[<span class="st">"SALARY"</span>].<span class="bu">min</span>(), data[<span class="st">"prediction"</span>].<span class="bu">min</span>())</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>    max_val <span class="op">=</span> <span class="bu">max</span>(data[<span class="st">"SALARY"</span>].<span class="bu">max</span>(), data[<span class="st">"prediction"</span>].<span class="bu">max</span>())</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>    axes[i].plot([min_val, max_val], [min_val, max_val], linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    axes[i].set_title(name)</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    axes[i].set_xlabel(<span class="st">"Actual SALARY"</span>)</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    axes[i].set_ylabel(<span class="st">"Predicted SALARY"</span>)</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">3</span>].axis(<span class="st">"off"</span>)</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"output/model_comparison.png"</span>)</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>rf_feature_names <span class="op">=</span> linear_names</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>rf_importances <span class="op">=</span> rf_model.featureImportances.toArray()</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"RF feature names:"</span>, <span class="bu">len</span>(rf_feature_names))</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"RF importances:"</span>, <span class="bu">len</span>(rf_importances))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 64:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 65:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 66:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="A04-SP26-HJMorehouse89_files/figure-html/cell-5-output-2.png" width="1142" height="950" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>RF feature names: 27
+RF importances: 27</code></pre>
+</div>
+</div>
+</section>
+<section id="the-random-forest-regression-is-meant-to-help-interpret-based-on-data-in-a-scenario-based-situation-with-the-guide-of-various-decision-trees.-in-this-context-it-might-be-related-to-looking-up-a-salary-range-based-on-factors-like-years-experience-and-relevant-work-experience." class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="the-random-forest-regression-is-meant-to-help-interpret-based-on-data-in-a-scenario-based-situation-with-the-guide-of-various-decision-trees.-in-this-context-it-might-be-related-to-looking-up-a-salary-range-based-on-factors-like-years-experience-and-relevant-work-experience."><span class="header-section-number">5</span> The random forest regression is meant to help interpret based on data in a scenario based situation, with the guide of various decision trees. In this context, it might be related to looking up a salary range, based on factors like years experience and relevant work experience.</h2>
+<div id="76d4519c" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rf_imp_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Feature"</span>: rf_feature_names,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Importance"</span>: rf_importances</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>}).sort_values(<span class="st">"Importance"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>rf_imp_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Feature"</span>: rf_feature_names,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Importance"</span>: rf_importances</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>}).sort_values(<span class="st">"Importance"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>rf_imp_df, x<span class="op">=</span><span class="st">"Importance"</span>, y<span class="op">=</span><span class="st">"Feature"</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Top 10 Feature Importances - Random Forest"</span>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"output/rf_feature_importance.png"</span>)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>results_df.to_csv(<span class="st">"output/model_metrics.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>coef_df.to_csv(<span class="st">"output/linear_coefficients.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>poly_coef_df.to_csv(<span class="st">"output/polynomial_coefficients.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Done. Files saved in output/"</span>)</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>spark.stop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="A04-SP26-HJMorehouse89_files/figure-html/cell-6-output-1.png" width="950" height="566" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Done. Files saved in output/</code></pre>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

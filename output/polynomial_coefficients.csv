@@ -1,0 +1,84 @@
+Feature,Coefficient
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Bachelor's degree""
+]",1658.7339697415396
+"EDUCATION_LEVELS_NAME_vec_[
+  ""No Education Listed""
+]",-155.67168257753784
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Bachelor's degree"",
+  ""Master's degree""
+]",1658.7339697415396
+"EDUCATION_LEVELS_NAME_vec_[
+  ""High school or GED"",
+  ""Bachelor's degree""
+]",35.57964890660105
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Bachelor's degree"",
+  ""Master's degree"",
+  ""Ph.D. or professional degree""
+]",0.9233705532162305
+"EDUCATION_LEVELS_NAME_vec_[
+  ""High school or GED""
+]",66.39334133818824
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Associate degree"",
+  ""Bachelor's degree""
+]",-2505.1790632852712
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Master's degree""
+]",3460.6008656957724
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Associate degree""
+]",-7513.075446715422
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Bachelor's degree"",
+  ""Ph.D. or professional degree""
+]",6710.251561307646
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Master's degree"",
+  ""Ph.D. or professional degree""
+]",-9047.269279513284
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Associate degree"",
+  ""Bachelor's degree"",
+  ""Master's degree""
+]",-4903.620524748586
+"EDUCATION_LEVELS_NAME_vec_[
+  ""High school or GED"",
+  ""Associate degree"",
+  ""Bachelor's degree""
+]",9122.733763599213
+"EDUCATION_LEVELS_NAME_vec_[
+  ""High school or GED"",
+  ""Bachelor's degree"",
+  ""Master's degree""
+]",-10716.868744317619
+"EDUCATION_LEVELS_NAME_vec_[
+  ""High school or GED"",
+  ""Associate degree""
+]",22020.791271990103
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Ph.D. or professional degree""
+]",4032.926352342043
+"EDUCATION_LEVELS_NAME_vec_[
+  ""High school or GED"",
+  ""Associate degree"",
+  ""Bachelor's degree"",
+  ""Master's degree""
+]",3613.6945971857226
+"EDUCATION_LEVELS_NAME_vec_[
+  ""Associate degree"",
+  ""Bachelor's degree"",
+  ""Master's degree"",
+  ""Ph.D. or professional degree""
+]",-9598.101768631908
+REMOTE_TYPE_NAME_vec_[None],-12688.26343255752
+REMOTE_TYPE_NAME_vec_Remote,-4589.965795439776
+REMOTE_TYPE_NAME_vec_Hybrid Remote,-5333.9473827770225
+REMOTE_TYPE_NAME_vec_Not Remote,-7813.870206342673
+MIN_YEARS_EXPERIENCE,8862.51229791324
+MIN_YEARS_EXPERIENCE_SQ,-63.45728954800617
+MAX_YEARS_EXPERIENCE,-187.9216824092024
+DURATION,190.60015727569683
+SALARY_FROM,3116.5319443935764
